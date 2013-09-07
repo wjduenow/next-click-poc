@@ -23,14 +23,14 @@ class Account(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-    	accnt_hash = self.request.get('accnt_hash')
-    	account = Account.get_by_id(accnt_hash)
+      accnt_hash = self.request.get('accnt_hash')
+      account = Account.get_by_id(accnt_hash)
     	
-    	if account:
+      if account and account.clicked == 1:
           self.response.headers['Content-Type'] = 'image/jpeg'
           fh = open('clicked-here-button.jpg')
           self.response.out.write(fh.read())
-        else:
+      else:
           self.response.headers['Content-Type'] = 'image/jpeg'
           fh = open('click-here-button.jpg')
           self.response.out.write(fh.read())
@@ -38,10 +38,17 @@ class MainHandler(webapp2.RequestHandler):
 class LogResults(webapp2.RequestHandler):
     def get(self):
         accnt_hash = self.request.get('accnt_hash')
-        account = Account(id = accnt_hash, clicked = 1)
+        account = Account.get_by_id(accnt_hash)
+        
+        if account:
+          click_state = -account.clicked + 1
+          account = Account(id = accnt_hash, clicked = click_state)
+        else:
+          account = Account(id = accnt_hash, clicked = 1)
+
         account.put()
         self.redirect("http://www.google.com/adwords/")
-  	
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),

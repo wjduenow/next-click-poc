@@ -17,15 +17,27 @@
 import webapp2
 from google.appengine.ext import ndb
 
+import jinja2
+import os
+
+jinja_environment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
 class Account(ndb.Model):
   clicked = ndb.IntegerProperty()
   date = ndb.DateTimeProperty(auto_now_add=True)
 
 class MainHandler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('index.html')
+    self.response.out.write(template.render(template_values))
+
+class ClickHandler(webapp2.RequestHandler):
     def get(self):
       accnt_hash = self.request.get('accnt_hash')
       account = Account.get_by_id(accnt_hash)
-    	
+      
       if account and account.clicked == 1:
           self.response.headers['Content-Type'] = 'image/jpeg'
           fh = open('clicked-here-button.jpg')
@@ -50,7 +62,23 @@ class LogResults(webapp2.RequestHandler):
         self.redirect("http://www.google.com/adwords/")
 
 
+class VWO1Handler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('vwo1.html')
+    self.response.out.write(template.render(template_values))
+
+class VWO2Handler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('vwo2.html')
+    self.response.out.write(template.render(template_values))
+
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
+    ('/vwo1', VWO1Handler),
+    ('/vwo2', VWO2Handler),
+    ('/clickHandler', ClickHandler),
     ('/log', LogResults),
 ], debug=True)

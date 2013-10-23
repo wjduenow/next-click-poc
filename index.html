@@ -12,30 +12,37 @@
 	</script>
 	<!-- End Visual Website Optimizer Asynchronous Code -->
 	<style type="text/css">
-css:
- 
+
 .tab{
-   position:relative;
-   width:265px;170px;
+ position:relative;
+ width:265px;
+ height:170px;
+ overflow:hidden;
 }
 .tab .iframe_overlay{
-    position:absolute;
-    z-index:95;
-    left:0;top:0;
-    height:100%;width:100%;
-    background:#fff;
-    opacity:0;
+  box-shadow:inset 0 0 3px rgba(0,0,0,0.2);
+  position:absolute;
+  z-index:95;
+  left:0;top:0;
+  height:100%;
+  width:100%;
 }
+
 .tab iframe{
-    position:relative;
-    -webkit-transform: scale(0.3, 0.29);
-    -moz-transform: scale(0.3, 0.29);
-    transform: scale(0.3, 0.29);
-    -moz-transform-origin:0 0;
-    -webkit-transform-origin:0 0;
-    transform-origin:0 0;
-    position:relative;
-    z-index:90;
+  border:0;
+  position:relative;
+  -webkit-transform: scale(0.3, 0.29);
+  -moz-transform: scale(0.3, 0.29);
+  transform: scale(0.3, 0.29);
+  -moz-transform-origin:0 0;
+  -webkit-transform-origin:0 0;
+  transform-origin:0 0;
+  position:relative;
+  z-index:90;
+}
+
+td {
+  padding:0 15px 0 5px ;
 }
 	</style>
    </head>
@@ -49,7 +56,7 @@ css:
       	</td>
       	<td><a href="/vwo2">Test 2</a></td>
       </tr>	
-      <tr>
+      <tr class="snapshots">
       	<td>
       		<a href="/vwo1">
 
@@ -72,10 +79,7 @@ css:
 
   <script type="text/javascript">
     $(document).ready(function () {
-	$('#thumb').delay(300).css({
-	    'width': '960px',
-	    'height': '480px'
-	  });
+
     });
   </script>
 

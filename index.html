@@ -12,21 +12,31 @@
 	</script>
 	<!-- End Visual Website Optimizer Asynchronous Code -->
 	<style type="text/css">
-		iframe#thumb {
-		  overflow: hidden;
-		  width: 960px;
-		  height: 480px;
-
-		  border: #49483E solid 1em;
-		  -moz-border-radius: 1em;
-		  -webkit-border-radius: 1em;
-		  border-radius: 1em;
-
-		  -moz-transform-origin:0 0; -moz-transform: scale(.3);
-		  -webkit-transform-origin:0 0; -webkit-transform: scale(.3);
-		  -o-transform-origin:0 0; -o-transform: scale(.3);
-		  transform-origin:0 0; transform: scale(.3);
-		}
+css:
+ 
+.tab{
+   position:relative;
+   width:265px;170px;
+}
+.tab .iframe_overlay{
+    position:absolute;
+    z-index:95;
+    left:0;top:0;
+    height:100%;width:100%;
+    background:#fff;
+    opacity:0;
+}
+.tab iframe{
+    position:relative;
+    -webkit-transform: scale(0.3, 0.29);
+    -moz-transform: scale(0.3, 0.29);
+    transform: scale(0.3, 0.29);
+    -moz-transform-origin:0 0;
+    -webkit-transform-origin:0 0;
+    transform-origin:0 0;
+    position:relative;
+    z-index:90;
+}
 	</style>
    </head>
   <body>
@@ -41,9 +51,21 @@
       </tr>	
       <tr>
       	<td>
-      		<a href="/vwo1"><iframe src="/vwo1" id="thumb"></iframe></a>
+      		<a href="/vwo1"
+
+<div id="tab0" class="tab">
+    <div class="iframe_overlay"></div>
+    <iframe src="vwo1.html" width="884" height="591" scrolling="no"></iframe>
+</div>
+
+      	</a>
       	</td>
-      	<td><a href="/vwo2"><iframe src="/vwo2" id="thumb"></iframe></a></td>
+      	<td><a href="/vwo2">
+      	<div id="tab0" class="tab">
+    <div class="iframe_overlay"></div>
+    <iframe src="vwo2.html" width="884" height="591" scrolling="no"></iframe>
+</div>
+</a></td>
       </tr>
 
     </table>

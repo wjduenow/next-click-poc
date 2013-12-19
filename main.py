@@ -16,6 +16,7 @@
 #
 import webapp2
 from google.appengine.ext import ndb
+import MySQLdb
 
 import jinja2
 import os
@@ -74,11 +75,45 @@ class VWO2Handler(webapp2.RequestHandler):
     template = jinja_environment.get_template('vwo2.html')
     self.response.out.write(template.render(template_values))
 
+class OPT1Handler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('opt1.html')
+    self.response.out.write(template.render(template_values))
+
+class OPT2Handler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('opt2.html')
+    self.response.out.write(template.render(template_values))
+
+class VideoRequests(webapp2.RequestHandler):
+    def get(self):
+        campaign_id = self.request.get('campaign_id')
+        video_request_id = self.request.get('video_request_id')
+        video_url = self.request.get('video_url')
+        
+        db = MySQLdb.connect(unix_socket='/cloudsql/' + next-click:idomoo, db='idomoo', user='root')
+        cursor = db.cursor()
+        #videos (campaign_id int, video_request_id int, video_url varchar(800));
+
+        cursor.execute('INSERT INTO videos (campaign_id, video_request_id, video_url) VALUES (%s, %s, %s)', (campaign_id, video_request_id, video_url))
+        db.commit()
+        db.close()
+        
+        template_values= {campaign_id, video_request_id, video_url}
+        template = jinja_environment.get_template('video_requests.html')
+        self.response.out.write(template.render(template_values))
+        
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/vwo1', VWO1Handler),
     ('/vwo2', VWO2Handler),
+    ('/opt1', OPT1Handler),
+    ('/opt2', OPT2Handler),
+    ('/video_requests', VideoRequests),
     ('/clickHandler', ClickHandler),
     ('/log', LogResults),
 ], debug=True)

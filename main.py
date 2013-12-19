@@ -21,6 +21,9 @@ import MySQLdb
 import jinja2
 import os
 
+import json
+
+
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -89,21 +92,42 @@ class OPT2Handler(webapp2.RequestHandler):
 
 class VideoRequests(webapp2.RequestHandler):
     def get(self):
-        campaign_id = self.request.get('campaign_id')
-        video_request_id = self.request.get('video_request_id')
-        video_url = self.request.get('video_url')
-        
-        db = MySQLdb.connect(unix_socket='/cloudsql/' + next-click:idomoo, db='idomoo', user='root')
-        cursor = db.cursor()
-        #videos (campaign_id int, video_request_id int, video_url varchar(800));
+        campaign_id = self.request.get('campaign_id', default_value='')
+        video_request_id = self.request.get('video_request_id', default_value='')
+        video_id = self.request.get('video_id', default_value='')
 
-        cursor.execute('INSERT INTO videos (campaign_id, video_request_id, video_url) VALUES (%s, %s, %s)', (campaign_id, video_request_id, video_url))
-        db.commit()
-        db.close()
+        if campaign_id and video_request_id and video_id:
         
-        template_values= {campaign_id, video_request_id, video_url}
-        template = jinja_environment.get_template('video_requests.html')
-        self.response.out.write(template.render(template_values))
+          if (os.getenv('SERVER_SOFTWARE') and
+            os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/')):
+            db = MySQLdb.connect(unix_socket='/cloudsql/next-click:idomoo', db='idomoo', user='root')
+          else:
+            db = MySQLdb.connect('173.194.104.195', 'root', 'qaz789', 'idomoo')
+
+          cursor = db.cursor()
+          
+
+          cursor.execute('INSERT INTO videos (campaign_id, video_request_id, video_id) VALUES (%s, %s, %s)', (campaign_id, video_request_id, video_id))
+          db.commit()
+          db.close()
+
+          status = 'success'
+        else:
+          status = "error"
+
+
+        template_values= {
+                          'status': status, 
+                          'values': {
+                                     'campaign_id': campaign_id, 
+                                     'video_request_id': video_request_id, 
+                                     'video_id': video_id
+                                     }
+                          }
+        
+
+        self.response.headers['Content-Type'] = 'application/json'   
+        self.response.out.write(json.dumps(template_values))
         
 
 

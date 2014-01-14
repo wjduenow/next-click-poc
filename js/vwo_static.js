@@ -1043,3 +1043,8 @@ window.vwo_$ = window.vwo_$ || window.jQuery;
   window._vis_opt_GA_track = _gaTrack;
   window._vis_opt_register_conversion = _registerConversion;
 })();
+
+var _vis_opt_account_id = 56181;
+if(typeof(_vis_opt_settings_loaded) == "boolean"){ _vis_opt_top_initialize(); }
+if(typeof(_vis_opt_settings_loaded) == "boolean" && typeof(_vis_opt_bottom_initialize) == "function")
+{vwo_$(document).ready(function() { _vis_opt_bottom_initialize(); }); }

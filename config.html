@@ -98,9 +98,10 @@ a#submit:active {
     <textarea id="vwo"></textarea>
     <a href="#" id="submit">convert</a>
     <label>JSON:</label>
-    <div id="json"></div>
+    <textarea id="json"></textarea>
   </div>
   <script>
+    $('#json').val('');
     $('#submit').click(function(e){
       e.preventDefault();
       //some empty vars
@@ -215,7 +216,7 @@ a#submit:active {
         exp_count > 0 ? transformed += ',\n' : transformed += '\n';                      
       }        
       transformed += '\t\t]\n\t}\n}';
-      $('#json').text(transformed);
+      $('#json').val(transformed);
     });
   </script>
 </body>

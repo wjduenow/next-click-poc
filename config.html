@@ -1,0 +1,222 @@
+<html>
+<head>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<style type="text/css">
+/* --- reset css --- */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}
+table{border-collapse:collapse;border-spacing:0;}
+fieldset,img{border:0;}
+address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:normal;}
+ol,ul {list-style:none;}
+caption,th {text-align:left;}
+h1,h2,h3,h4,h5,h6{font-size:100%;margin:0;letter-spacing:1px;font-weight:normal;}
+q:before,q:after{content:'';}
+abbr,acronym {border:0;}
+select, input, textarea {font:99% Arial,helvetica,clean,sans-serif;}
+pre, code {font:115% monospace;}
+a,a:focus,div:focus,ul:focus {outline:0px;}
+body {background:#f8f8f8; color:#474747; font-size:62.5%;font-family:Arial, Helvetica, sans-serif;}
+html {overflow-y:scroll;overflow-x:auto;}
+
+#form {
+  margin:20px auto;
+  width:960px;
+}
+h2 {
+  font-size:22px;
+  font-weight:normal;
+  margin:0 0 10px;
+}
+p {
+  color:#888;
+  font-size:12px;
+  line-height:20px;
+  margin-bottom:15px;
+}
+label {
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin:0 0 5px;
+}
+
+textarea {
+  background:#fafafa;
+  border:1px solid #ddd;
+  display:block;
+  font-size:12px;
+  line-height:20px;
+  max-width:100%;
+  min-height:250px;
+  min-width:100%;
+  padding:5px;
+  width:100%;
+}
+
+div#json {
+  background:#fafafa;
+  border:1px solid #ddd;
+  display:block;
+  font-size:12px;
+  height:250px;
+  line-height:20px;
+  overflow:auto;
+  padding:5px;
+  white-space:pre-wrap;
+  width:calc(100% - 12px);
+}
+
+a#submit {
+  background:#fafafa;
+  border:1px solid #ddd;
+  border-radius:2px;
+  color:#474747;
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin:15px auto 25px;
+  padding:10px 0 8px; 
+  text-align:center;
+  text-decoration:none;
+  width:80px; 
+}
+a#submit:hover { background:#f6f6f6; color:#222; }
+a#submit:active {
+  background:#666;
+  border:1px solid #555;
+  box-shadow:inset 0 0 3px rgba(0,0,0,0.9) ;
+  color:#fff;
+}
+</style>
+</head>
+<body>
+  <div id="form">
+    <h2>Create Configuration File</h2>
+    <p>This form will allow you to convert the VWO variables into a json configuration file. Copy and paste the VMO variables in to the textarea bellow and then click the 'convert' button. JSON will appear below.</p>
+    <label>VWO variables:</label>
+    <textarea id="vwo"></textarea>
+    <a href="#" id="submit">convert</a>
+    <label>JSON:</label>
+    <div id="json"></div>
+  </div>
+  <script>
+    $('#submit').click(function(e){
+      e.preventDefault();
+      //some empty vars
+      var _vis_opt_domain, _vis_opt_heatmap,_vis_opt_settings_loaded,_vwo_acc_id;
+      var content = $('#vwo').val()
+      eval(content);
+      var transformed = 'var vwo_config = {\n\t"vis": {\n\t\t';
+      if(_vis_opt_domain != null){
+        transformed += '"opt_domain": "' + _vis_opt_domain + '",\n\t\t';
+      }
+      if(_vis_opt_heatmap != null){
+        transformed += '"opt_heatmap": ' + _vis_opt_heatmap + ',\n\t\t';
+      }
+      if(_vis_opt_settings_loaded != null){
+        transformed += '"opt_settings_loaded": ' + _vis_opt_settings_loaded + '\n\t';
+      }
+      transformed += '},\n\t"vwo": {\n\t\t"account_id": ' + _vwo_acc_id + ',\n\t\t' +
+        '"experiments" : [';
+      var exp_count = Object.keys(_vwo_exp).length;
+      for(var key in _vwo_exp) {
+        var exp = _vwo_exp[key];
+        transformed += '\n\t\t\t{\n';
+        transformed += '\t\t\t"id" : ' + Number(key) + ',\n';
+        transformed += '\t\t\t"name" : "' + exp.name + '",\n';
+        transformed += '\t\t\t"version" : "' + exp.version + '",\n';
+        transformed += '\t\t\t"clickmap" : "' + exp.clickmap + '",\n';
+        transformed += '\t\t\t"type" : "' + exp.type + '",\n';
+        transformed += '\t\t\t"status" : "' + exp.status + '",\n';
+        transformed += '\t\t\t"pc_traffic" : "' + exp.pc_traffic + '",\n';
+        transformed += '\t\t\t"url" : "' + exp.url + '",\n';
+        transformed += '\t\t\t"url_pattern" : "' + exp.url_pattern  + '",\n';
+        transformed += '\t\t\t"exclude_url" : "' + exp.exclude_url  + '",\n';
+        transformed += '\t\t\t"multiple_domains" : "' + exp.multiple_domains + '",\n';
+        transformed += '\t\t\t"segment_code" : "' + exp.segment_code  + '",\n';
+        transformed += '\t\t\t"sections" : [\n';
+        var sections = exp.sections;
+        var section_count = Object.keys(sections).length;
+        for(var idx in sections) {
+          var section = sections[idx];
+          transformed += '\t\t\t\t{\n';
+          transformed += '\t\t\t\t\t"name" : "' + section.name + '",\n';
+          transformed += '\t\t\t\t\t"path" : "' + section.path + '",\n';
+          transformed += '\t\t\t\t\t"variations" : [\n';
+          var variations_count = Object.keys(section.variations).length;
+          for(var p in section.variations){
+            transformed += '\t\t\t\t\t\t"' + section.variations[p].replace(/\\/g,'\\\\').replace(/\//g,'\\\/').replace(/"/g,'\\"') + '"';
+            variations_count--;
+            variations_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+          }
+          transformed += '\t\t\t\t\t],\n'; //close variations
+          transformed += '\t\t\t\t\t"variation_names" : [\n';
+          var variation_names_count = Object.keys(section.variation_names).length;
+          for(var p in section.variation_names){
+            transformed += '\t\t\t\t\t\t"' + section.variation_names[p] + '"';
+            variation_names_count--;
+            variation_names_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+          }
+          transformed += '\t\t\t\t\t],\n'; //close variation names
+          transformed += '\t\t\t\t\t"segments" : [\n';
+          var segments_count = Object.keys(section.segment).length;
+          for(var p in section.segment){
+            transformed += '\t\t\t\t\t\t"' + section.segment[p] + '"';
+            segments_count--;
+            segments_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+          }
+          transformed += '\t\t\t\t\t]\n'; //close segments                      
+          transformed += '\t\t\t\t}';//close section
+          section_count--;
+          section_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+        }
+        transformed += '\t\t\t],\n'; //close sections
+        var combs = exp.combs;
+        var comb_count = Object.keys(combs).length;
+        transformed += '\t\t\t"combs" : [\n';
+        for(var idx in combs) {   
+          transformed += '\t\t\t\t' + combs[idx];
+          comb_count--;
+          comb_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+        }
+        transformed += '\t\t\t],\n';//close combs 
+        var ncombs = exp.comb_n;
+        var ncomb_count = Object.keys(ncombs).length;
+        transformed += '\t\t\t"comb_n" : [\n';
+        for(var idx in ncombs) {   
+          transformed += '\t\t\t\t"' + ncombs[idx] + '"';
+          ncomb_count--;
+          ncomb_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+        }
+        transformed += '\t\t\t],\n';//close ncombs  
+        var goals = exp.goals;
+        var goals_count = Object.keys(goals).length;
+        transformed += '\t\t\t"goals" : [\n';
+        for(var idx in goals) {   
+          var goal = goals[idx];
+          transformed += '\t\t\t\t{\n';
+          transformed += '\t\t\t\t\t"url" : "' + goal.url + '",\n';
+          transformed += '\t\t\t\t\t"type" : "' + goal.type + '"\n';
+          transformed += '\t\t\t\t}';
+          goals_count--;
+          goals_count > 0 ? transformed += ',\n' : transformed += '\n' ;
+        }
+        transformed += '\t\t\t],\n';//close goals    
+        if(exp.GA){
+          transformed += '\t\t\t"GA" : {\n';
+          transformed += '\t\t\t\t"s" : ' + exp.GA['s'] + ',\n';
+          transformed += '\t\t\t\t"p" : "' + exp.GA['p'] + '"\n';
+          transformed += '\t\t\t},\n';
+        }  
+        transformed += '\t\t\t"third_party" : {}\n';  
+        transformed += '\t\t\t}';//close experiment
+        exp_count--;
+        exp_count > 0 ? transformed += ',\n' : transformed += '\n';                      
+      }        
+      transformed += '\t\t]\n\t}\n}';
+      $('#json').text(transformed);
+    });
+  </script>
+</body>
+</html>

@@ -66,6 +66,12 @@ class LogResults(webapp2.RequestHandler):
         self.redirect("http://www.google.com/adwords/")
 
 
+class VWOConfigHandler(webapp2.RequestHandler):
+  def get(self):
+    template_values= {}
+    template = jinja_environment.get_template('config.html')
+    self.response.out.write(template.render(template_values))
+
 class VWO1Handler(webapp2.RequestHandler):
   def get(self):
     template_values= {}
@@ -139,5 +145,6 @@ app = webapp2.WSGIApplication([
     ('/opt2', OPT2Handler),
     ('/video_requests', VideoRequests),
     ('/clickHandler', ClickHandler),
+    ('/config', VWOConfigHandler),
     ('/log', LogResults),
 ], debug=True)

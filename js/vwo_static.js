@@ -234,6 +234,11 @@ window.vwo_$ = window.vwo_$ || window.jQuery;
     return isQueryParamPresentInPattern.test(url$$0) ? (isQueryParamPresentInPattern = RegExp("^" + _regexEscape(pattern).replace(/\\\*/g, "(.*)") + "$", "gi"), !returnVal || isQueryParamPresentInPattern.exec(url$$0)) : !1
   }
   function _createCookie(name, value, days, id) {
+  	/*  
+  	* edit to remove all cookie creation 
+  	* function can still be called, it just does nothing now
+  	* 
+  	* 02-25-2014 c.mihm
     window._vis_debug && 0 !== name.indexOf("debug") && (name = "debug" + name);
     var isThirdParty = !1;
     if(!isNaN(_cookieDays = parseFloat(_cookieDays)) && isFinite(_cookieDays)) {
@@ -248,6 +253,7 @@ window.vwo_$ = window.vwo_$ || window.jQuery;
     }), domain = "//dev.visualwebsiteoptimizer.com/ping_tpc.php?account=" + window._vwo_acc_id + "&name=" + encodeURIComponent(name) + "&value=" + encodeURIComponent(value) + "&days=" + days + "&random=" + Math.random(), /MSIE (\d+\.\d+);/.test(navigator.userAgent) ? expires.attr("src", domain) : (expires = vwo_$("<form>").attr({action:"//dev.visualwebsiteoptimizer.com/ping_tpc.php", "accept-charset":"UTF-8", target:expires.attr("name"), enctype:"application/x-www-form-urlencoded", method:"post", 
     id:"vwo_form", style:"display:none"}).appendTo("head"), expires.attr("action", domain).submit(), expires.remove()));
     triggerEvent(SET_COOKIE, name, value, days, id, isThirdParty)
+    */
   }
   function _readCookie(name) {
     window._vis_debug && (name = "debug" + name);
